@@ -21,7 +21,7 @@ export function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null)); // Создастся Массив с 9 элементами, каждому из которых будет присвоено Значение "null".
 
   function handleClick(i) {
-    if (squares[i]) {
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
     const nextSquares = squares.slice();
@@ -54,6 +54,26 @@ export function Board() {
     </>
   );
 } //In React, it’s conventional to use onSomething names for props which represent events and handleSomething for the function definitions which handle those events.
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
 
 function Square({ value, onSquareClick }) {
   // const [value, setValue] = useState(null); // value сохраняет Значиние, setValue - Функция, меняющая Значение. null - начальное Значение для переменной Состояния.
