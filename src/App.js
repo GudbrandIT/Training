@@ -4,7 +4,7 @@ import { ProductList } from "./components/ProductList";
 import "./styles.css";
 import { useState } from "react";
 
-function App() {
+export function App() {
   return (
     <>
       {/* <h1>Hello, World</h1> */}
@@ -34,8 +34,17 @@ export function Board() {
     setXIsNext(!xIsNext);
   }
 
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
+
   return (
     <>
+      <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -54,6 +63,19 @@ export function Board() {
     </>
   );
 } //In React, it’s conventional to use onSomething names for props which represent events and handleSomething for the function definitions which handle those events.
+
+export default function Game() {
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board />
+      </div>
+      <div className="game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
+  );
+} // This (removing the export default keywords) tells your index.js file to use the Game component as the top-level component instead of your Board component.
 
 function calculateWinner(squares) {
   const lines = [
@@ -87,6 +109,6 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-export default App;
+// export default App;
 
 // полезная статья по Состояниям: https://reactdev.ru/learn/state-a-components-memory/
