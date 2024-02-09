@@ -16,12 +16,12 @@ export function App() {
   );
 } // Это JSX-разметка, т.е. объединение HTML и JavaScript в одно целое
 
-export function Board() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null)); // Создастся Массив с 9 элементами, каждому из которых будет присвоено Значение "null".
+export function Board({ xIsNext, squares, onPlay }) {
+  // const [xIsNext, setXIsNext] = useState(true);
+  // const [squares, setSquares] = useState(Array(9).fill(null)); // Создастся Массив с 9 элементами, каждому из которых будет присвоено Значение "null".
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+    if (calculateWinner(squares) || squares[i]) {
       return;
     }
     const nextSquares = squares.slice();
@@ -30,8 +30,8 @@ export function Board() {
     } else {
       nextSquares[i] = "O";
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
+    // setXIsNext(!xIsNext);
   }
 
   const winner = calculateWinner(squares);
@@ -65,10 +65,18 @@ export function Board() {
 } //In React, it’s conventional to use onSomething names for props which represent events and handleSomething for the function definitions which handle those events.
 
 export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]); // state that contains the entire game history
+  const currentSquares = history[history.lenght - 1];
+
+  function handlePlay(nextSquares) {
+    //TODO
+  }
+
   return (
     <div className="game">
       <div className="game-board">
-        <Board />
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
         <ol>{/*TODO*/}</ol>
