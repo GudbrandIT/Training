@@ -16,7 +16,7 @@ export function App() {
   );
 } // Это JSX-разметка, т.е. объединение HTML и JavaScript в одно целое
 
-export function Board({ xIsNext, squares, onPlay }) {
+function Board({ xIsNext, squares, onPlay }) {
   // const [xIsNext, setXIsNext] = useState(true);
   // const [squares, setSquares] = useState(Array(9).fill(null)); // Создастся Массив с 9 элементами, каждому из которых будет присвоено Значение "null".
 
@@ -30,7 +30,7 @@ export function Board({ xIsNext, squares, onPlay }) {
     } else {
       nextSquares[i] = "O";
     }
-    onPlay(nextSquares);
+    onPlay(nextSquares); // so the Game component can update the Board when the user clicks a square
     // setXIsNext(!xIsNext);
   }
 
@@ -67,11 +67,38 @@ export function Board({ xIsNext, squares, onPlay }) {
 export default function Game() {
   const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]); // state that contains the entire game history
-  const currentSquares = history[history.lenght - 1];
+  const [currentMove, setCurrentMove] = useState(0);
+  // const currentSquares = history[history.length - 1];
+  const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares) {
-    //TODO
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    // setHistory([...history, nextSquares]);
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+    setXIsNext(!xIsNext);
+    console.log(history);
   }
+
+  function jimpTo(nextMove) {
+    setCurrentMove(nextMove);
+    setXIsNext(nextMove % 2 === 0); //set xIsNext to true if the number that you’re changing currentMove to is even
+  }
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = "Go to move #" + move;
+    } else {
+      description = "Go to game start";
+    }
+    return (
+      <li key={move}>
+        <button onClick={() => jimpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+  // "key" is a special and reserved property in React
 
   return (
     <div className="game">
@@ -79,7 +106,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{/*TODO*/}</ol>
+        <ol>{moves}</ol>
       </div>
     </div>
   );
