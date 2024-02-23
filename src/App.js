@@ -65,9 +65,10 @@ function Board({ xIsNext, squares, onPlay }) {
 } //In React, it’s conventional to use onSomething names for props which represent events and handleSomething for the function definitions which handle those events.
 
 export default function Game() {
-  const [xIsNext, setXIsNext] = useState(true);
+  // const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]); // state that contains the entire game history
   const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0; // ...so that it doesn’t store xIsNext as a separate state variable and instead figures it out based on the currentMove
   // const currentSquares = history[history.length - 1];
   const currentSquares = history[currentMove];
 
@@ -76,13 +77,13 @@ export default function Game() {
     // setHistory([...history, nextSquares]);
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-    setXIsNext(!xIsNext);
+    // setXIsNext(!xIsNext); //  if you know the value of currentMove, then you can always figure out what xIsNext should be
     console.log(history);
   }
 
   function jimpTo(nextMove) {
     setCurrentMove(nextMove);
-    setXIsNext(nextMove % 2 === 0); //set xIsNext to true if the number that you’re changing currentMove to is even
+    // setXIsNext(nextMove % 2 === 0); //set xIsNext to true if the number that you’re changing currentMove to is even
   }
 
   const moves = history.map((squares, move) => {
